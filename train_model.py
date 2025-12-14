@@ -10,7 +10,7 @@ from tensorflow.keras.optimizers import Adam
 # --- Basic Configuration ---
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 15
+EPOCHS = 5
 SEED = 42
 
 DATA_DIR = "natural_images"
@@ -29,7 +29,8 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     shuffle=True,
     seed=SEED,
     validation_split=0.2,
-    subset="training"
+    subset="training",
+    label_mode="categorical"
 )
 
 val_ds = tf.keras.utils.image_dataset_from_directory(
@@ -39,7 +40,8 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     shuffle=True,
     seed=SEED,
     validation_split=0.2,
-    subset="validation"
+    subset="validation",
+    label_mode="categorical"
 )
 
 class_names = train_ds.class_names
@@ -79,7 +81,7 @@ model = Model(inputs=base_model.input, outputs=output)
 
 model.compile(
     optimizer=Adam(learning_rate=0.0001),
-    loss="sparse_categorical_crossentropy",
+    loss="categorical_crossentropy",
     metrics=["accuracy"]
 )
 
@@ -97,4 +99,4 @@ history = model.fit(
 
 # --- Save Model ---
 model.save(MODEL_NAME)
-print(f"Model saved as {MODEL_NAME}")
+print(f"\nFinished! Model saved as {MODEL_NAME}")
